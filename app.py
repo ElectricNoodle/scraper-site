@@ -1,7 +1,8 @@
-from flask import Flask, render_template, json, request
+from flask import Flask, render_template, json, request, redirect,session
 from werkzeug import generate_password_hash, check_password_hash
 from flaskext.mysql import MySQL
 from flask import session
+import re
 
 app = Flask(__name__)
 app.secret_key = 'squirrels like to play in the park.'
@@ -13,6 +14,7 @@ app.config['MYSQL_DATABASE_USER'] = 'scraper'
 app.config['MYSQL_DATABASE_PASSWORD'] = '42Ir&fdds'
 app.config['MYSQL_DATABASE_DB'] = 'scraper'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+
 mysql.init_app(app)
 
 conn = mysql.connect()
@@ -25,6 +27,18 @@ def main():
 @app.route('/showSignin')
 def showSignin():
     return render_template('sign_in.html')
+
+@app.route('/home')
+def userHome():
+    if session.get('user'):
+        return render_template('user_home.html')
+    else:
+        return render_template('error.html',error = 'Unauthorized Access')
+
+@app.route('/logout')
+def logout():
+    session.pop('user',None)
+    return redirect('/')
 
 @app.route('/validateLogin',methods=['POST'])
 def validateLogin():
@@ -44,7 +58,7 @@ def validateLogin():
         if len(data) > 0:
             if check_password_hash(str(data[0][3]),_password):
                 session['user'] = data[0][0]
-                return redirect('/userHome')
+                return redirect('/home')
             else:
                 return render_template('error.html',error = 'Wrong Email address or Password.')
         else:
@@ -82,6 +96,24 @@ def signUp():
             return json.dumps({'message':'User created successfully !'})
     else:
         return json.dumps({'error':str(data[0])})
+
+
+@app.route('/add')
+def showAddItem():
+    return render_template('add_item.html')
+
+
+@app.route('/add',methods=['POST'])
+def addItem():
+    url = request.form['inputUrl']
+
+    urlCheck = re.search( r'[www.|\s?]([a-z]+)\.[com|co\.uk]+', url, re.M|re.I)
+
+    if urlCheck:
+       print "searchObj.group() : ", urlCheck.group()
+       print "searchObj.group(1) : ", urlCheck.group(1)
+    else:
+       return render_template('error.html',error = url + ' is not a valid URL :(.')
 
 if __name__ == "__main__":
     app.run(host='10.8.46.3')

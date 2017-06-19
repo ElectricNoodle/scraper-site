@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <title>Stock Checker</title>
+ 
+ 
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+ 
+    <script src="../static/js/jquery-1.11.2.js"></script>
+ 
+ 
+</head>
+ 
+<body>
+ 
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="/home">Home</a><li>
+                    <li role="presentation" class="active"><a href="#">Add Item</a></li>
+                    <li role="presentation"><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Stock Checker</h3>
+        </div>
+        <section>
+            <div class="jumbotron">
+                <form class="form-horizontal form-inline" method="post" action="/add">
+                    <fieldset>
+     
+                        <!-- Form Name -->
+                        <legend>Add Item to track (Wayfair only for now):</legend>
+     
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="txtTitle">URL:</label>
+                            <div class="col-md-4">
+                                <input id="txtUrl" name="inputUrl" type="text" placeholder="" class="form-control input-md">
+                            </div>
+                        </div>
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="singlebutton"></label>
+                            <div class="col-md-4">
+                                <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Add" />
+                            </div>
+                        </div>
+     
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+        <footer class="footer">
+        </footer>
+ 
+    </div>
+</body>
+ 
+</html>
