@@ -8,7 +8,7 @@
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
  
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-    <link href="../static/signup.css" rel="stylesheet">
+    <link href="../static/css/signup.css" rel="stylesheet">
  
  
 </head>
@@ -28,7 +28,33 @@
         </div>
         <h5>Any items being tracked are shown here: </h5>
         <div class="jumbotron">
-            
+        <table class = "table table-striped">
+            {% if items %}
+
+
+            <tr>
+                <td><b>Item</b></td><td><b>URL</b></td><td><b>Price</b></td><td><b>Shipping</b></td><td><b>Stock</b></td><td><b>Status</b></td>
+            </tr>
+            {% endif %}
+            {% for x in items %}
+                <tr>
+                    <td>{{ x.name }}</td>
+                    <td><a href="{{ x.url }}">Link</a></td>
+                    <td>{{ x.price }}</td>
+                    <td>{{ x.shipping }}</td>
+                    <td>{{ x.stock }} </td>
+                    <td>
+                        {% if x.status == "NEW" %}
+                            <img src="../static/images/processing.gif" alt="Processing..." style="width:20px;height:20px;">
+                        {% else %}
+
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <p> No items added. </p>
+            {% endfor %}
+        </table>
         </div>
     
  

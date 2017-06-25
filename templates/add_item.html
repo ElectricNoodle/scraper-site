@@ -4,11 +4,11 @@
 <head>
     <title>Stock Checker</title>
  
- 
+    <link href="../static/css/general.css" rel="stylesheet">
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
  
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
- 
+    
     <script src="../static/js/jquery-1.11.2.js"></script>
  
  
@@ -28,10 +28,14 @@
             <h3 class="text-muted">Stock Checker</h3>
         </div>
         <section>
+            {% if success == 1 %}
+                <p class = "result_success">{{result}}</p>
+            {% else %}
+                <p class = "result_fail">{{result}}</p>
+            {% endif %}
             <div class="jumbotron">
                 <form class="form-horizontal form-inline" method="post" action="/add">
                     <fieldset>
-     
                         <!-- Form Name -->
                         <legend>Add Item to track (Wayfair only for now):</legend>
      

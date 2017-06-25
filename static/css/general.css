@@ -1,0 +1,8 @@
+#result_success {
+  color : green;
+  font-size: 12px;
+}
+#result_fail {
+  color : red;
+  font-size: 12px;
+}
