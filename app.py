@@ -121,9 +121,6 @@ def addItem():
     urlCheck = re.search( r'[www.|\s?]([a-z]+)\.[com|co\.uk]+\/([\%0-9a-zA-Z-]+)', url, re.M|re.I)
 
     if urlCheck:
-       print "searchObj.group() : ", urlCheck.group()
-       print "searchObj.group(1) : ", urlCheck.group(1)
-       print "searchObj.group(2) :",  urlCheck.group(2)
        item = urlCheck.group(2)
        if urlCheck.group(1) == 'wayfair':
            cursor.callproc('addItem',(url,session['email'], item))
