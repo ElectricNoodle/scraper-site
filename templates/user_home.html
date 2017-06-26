@@ -29,11 +29,14 @@
         <h5>Any items being tracked are shown here: </h5>
         <div class="jumbotron">
         <table class = "table table-striped">
+            {% if success == 1 %}
+                <p class = "result_success">{{result}}</p>
+            {% else %}
+                <p class = "result_fail">{{result}}</p>
+            {% endif %}
             {% if items %}
-
-
             <tr>
-                <td><b>Item</b></td><td><b>URL</b></td><td><b>Price</b></td><td><b>Shipping</b></td><td><b>Stock</b></td><td><b>Status</b></td>
+                <td><b>Item</b></td><td><b>URL</b></td><td><b>Price</b></td><td><b>Shipping</b></td><td><b>Stock</b></td><td><b>Status</b></td><td>     </td>
             </tr>
             {% endif %}
             {% for x in items %}
@@ -50,6 +53,7 @@
 
                         {% endif %}
                     </td>
+                    <td><a href="/delete/{{x.name}}"><img src="" alt="Delete" style="width:20px;height:20px;"></img></a></td>
                 </tr>
             {% else %}
                 <p> No items added. </p>

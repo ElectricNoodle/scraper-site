@@ -1,4 +1,4 @@
-from flask import Flask, render_template, json, request, redirect,session,jsonify
+from flask import Flask, render_template, json, request, redirect,url_for,session,jsonify
 from werkzeug import generate_password_hash, check_password_hash
 from flaskext.mysql import MySQL
 from flask import session
@@ -31,13 +31,13 @@ def showSignin():
 @app.route('/home')
 def userHome():
     if session.get('user'):
+
         con = mysql.connect()
         cursor = con.cursor()
-        print session['email'];
         cursor.callproc('getItems',(session['email'],))
         entries = [dict(id=row[0], user=row[1],name=row[2], url=row[3], price= row[4],shipping= row[5],stock_no= row[6],status=row[7], last_updated = row[8], regex= row[9]) for row in cursor.fetchall()]
-        print entries;
-        return render_template('user_home.html',items = entries)
+
+        return render_template('user_home.html',result=request.args.get('result'), success=request.args.get('success'), items = entries)
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
@@ -85,7 +85,7 @@ def validateLogin():
 
 @app.route('/showSignUp')
 def showSignUp():
-    return render_template('sign_up.html')
+    return render_template('sign_up.html', result=request.args.get('result'), success=request.args.get('success'))
 
 @app.route('/signUp',methods=['POST'])
 def signUp():
@@ -102,9 +102,11 @@ def signUp():
         data = cursor.fetchall()
         if len(data) is 0:
             conn.commit()
-            return json.dumps({'message':'User created successfully !'})
+            return url_for('showSignin',result="Registration Successful. Please login: ",success=1)
+        else:
+            return url_for('showSignUp',result='Username already exists. :( ', success=0)
     else:
-        return json.dumps({'error':str(data[0])})
+            return url_for('showSignUp', result = 'Error creating user. Please try again :(', success = 0)
 
 
 @app.route('/add')
@@ -130,12 +132,30 @@ def addItem():
                conn.commit()
                result = "Added: " + url
                return render_template('add_item.html', result = result, success = 1)
+           else:
+               return render_template('add_item.html', result = 'Item already added.', success = 0)
        else:
             result = "Only wayfair is supported for now."
             return render_template('add_item.html', result = result, success = 0)
     else:
        result = "Error adding link :("
        return render_template('add_item.html', result = result, success = 0)
+
+
+@app.route('/delete/<name>')
+def delete_item(name):
+    print "NAME: " + name;
+    cursor.callproc('deleteItem',(name,session['email']))
+    data = cursor.fetchall()
+    if len(data) is 0:
+      conn.commit()
+      return redirect(url_for('userHome', result = '', success = 1))
+    else:
+      return redirect(url_for('userHome', result = 'Error deleting item.', success = 0))
+
+    
+
+
 
 if __name__ == "__main__":
     app.run(host='10.8.46.3')

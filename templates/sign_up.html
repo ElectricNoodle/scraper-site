@@ -2,12 +2,11 @@
 <html lang="en">
   <head>
     <title>Stock Checker</title>
- 
-    
+    <link href="../static/css/sign_up.css" rel="stylesheet">
+    <link href="../static/css/general.css" rel="stylesheet">
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
- 
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-    <link href="../static/sign_up.css" rel="stylesheet">
+    
     <script src="../static/js/jquery-3.2.1.js"></script> 
   </head>
  
@@ -24,7 +23,14 @@
         </nav>
         <h3 class="text-muted">Stock Checker</h3>
       </div>
- 
+      {% if result  %}
+        {% if success == 1 %}
+            <p class = "result_success">{{result}}</p>
+        {% else %}
+            <p class = "result_fail">{{result}}</p>
+        {% endif %}
+      {% endif %}
+
       <div class="jumbotron">
         <form class="form-signin">
         <label for="inputName" class="sr-only">Name</label>
@@ -56,7 +62,9 @@ $(document).ready(function() {
             data: $('form').serialize(),
             type: 'POST',
             success: function(response) {
-                console.log(response);
+              console.log(response);
+                window.location = response;
+
             },
             error: function(error) {
                 console.log(error);
