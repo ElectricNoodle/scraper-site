@@ -6,14 +6,19 @@
  
  
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
- 
+    
+    
+     <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+      
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     <link href="../static/css/signup.css" rel="stylesheet">
  
  
 </head>
  
-<body>
+<body style="width: 100%">
  
     <div class="container">
         <div class="header">
@@ -28,37 +33,23 @@
         </div>
         <h5>Any items being tracked are shown here: </h5>
         <div class="jumbotron">
-        <table class = "table table-striped">
-            {% if success == 1 %}
-                <p class = "result_success">{{result}}</p>
-            {% else %}
-                <p class = "result_fail">{{result}}</p>
-            {% endif %}
-            {% if items %}
-            <tr>
-                <td><b>Item</b></td><td><b>URL</b></td><td><b>Price</b></td><td><b>Shipping</b></td><td><b>Stock</b></td><td><b>Status</b></td><td>     </td>
-            </tr>
-            {% endif %}
-            {% for x in items %}
-                <tr>
-                    <td>{{ x.name }}</td>
-                    <td><a href="{{ x.url }}">Link</a></td>
-                    <td>{{ x.price }}</td>
-                    <td>{{ x.shipping }}</td>
-                    <td>{{ x.stock }} </td>
-                    <td>
-                        {% if x.status == "NEW" %}
-                            <img src="../static/images/processing.gif" alt="Processing..." style="width:20px;height:20px;">
-                        {% else %}
-
-                        {% endif %}
-                    </td>
-                    <td><a href="/delete/{{x.name}}"><img src="" alt="Delete" style="width:20px;height:20px;"></img></a></td>
-                </tr>
-            {% else %}
-                <p> No items added. </p>
-            {% endfor %}
-        </table>
+        {% if success == 1 %}
+            <p class = "result_success">{{result}}</p>
+        {% else %}
+            <p class = "result_fail">{{result}}</p>
+        {% endif %}
+        <table id="myTable" class="table table-striped" style="width:100%" >  
+            <thead>  
+              <tr>
+            <th>Name</th>
+            <th>URL</th>
+            <th>Stock</th>
+            <th>Price</th>
+            <th>Shipping</th>
+            <th>Updated</th>
+          </tr>
+        </thead> 
+          </table>  
         </div>
     
  
@@ -70,3 +61,24 @@
 </body>
  
 </html>
+<script>
+
+$(document).ready(function() {
+    $('#myTable').DataTable( {
+        "processing": true,
+          'ajax': '/test',
+        // add column definitions to map your json to the table
+        "columns": [
+            {data: "name"},
+            {data: "url"},
+            {data: "stock"},
+            {data: "price"},
+            {data: "shipping"},
+            {data: "updated"}
+        ]
+
+    } );
+});
+</script>
+
+

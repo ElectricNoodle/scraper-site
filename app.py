@@ -3,7 +3,8 @@ from werkzeug import generate_password_hash, check_password_hash
 from flaskext.mysql import MySQL
 from flask import session
 import re
-
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 app = Flask(__name__)
 app.secret_key = 'squirrels like to play in the park.'
 
@@ -40,6 +41,27 @@ def userHome():
         return render_template('user_home.html',result=request.args.get('result'), success=request.args.get('success'), items = entries)
     else:
         return render_template('error.html',error = 'Unauthorized Access')
+
+@app.route('/test')
+def test():
+    if session.get('user'):
+        output = {}
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('getItems',(session['email'],))
+        # price= row[4],shipping= row[5],stock= row[6],status=row[7], updated = row[8]
+
+        entries = [dict(name=row[2], url=row[3], price=str(row[4]), shipping=row[5], stock=row[6], updated=row[8]) for row in cursor.fetchall()]
+        #row[4]  = str(row[4])
+        pp.pprint(entries)
+        output['aaData'] = [dict(name="Test",url="www.sausage.com/", price="URL", shipping="1.99", stock="Stocktest", updated="10"), dict(name="Test",url="www.sausage.com/", price="URL", shipping="1.99", stock="Stocktest", updated="10")]
+        pp.pprint(output)
+       # print jsonify(entries)
+       # output['aaData'] = [dict(name=row[0], url=row[1]), dict(name=row[0], url=row[1])]
+        output['aaData'] = entries
+        pp.pprint(output)
+        return jsonify(output)
+
 
 
 @app.route('/logout')
